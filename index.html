@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+        integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+</head>
+
+<body>
+    <nav class="navbar navbar-dark bg-dark justify-content-center">
+        <div class="navbar-brand">
+            <p class=h2>Weather Dashboard</p>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-2">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"></div>
+            <div class="col-xs-1" id="searchButton">
+                <a href="#" class="btn btn-primary">
+                    <i class="fas fa-search"></i>
+                </a></div>
+        </div>
+        <div class=row>
+            <div class="col-sx-3">
+                <ul class="list-group">
+                    <li class="list-group-item">Cras justo odio</li>
+                    <li class="list-group-item">Dapibus ac facilisis in</li>
+                    <li class="list-group-item">Morbi leo risus</li>
+                    <li class="list-group-item">Porta ac consectetur ac</li>
+                    <li class="list-group-item">Vestibulum at eros</li>
+            </div>
+        </div>
+    </div>
+    </ul>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script>
+        var apiKey = "ee316b84f88a186c92a6e31cd2dad1d8";
+        $("#searchButton").on("click", function () {
+            var city = $(this).parent("div").children("div").children("input").val();
+            console.log(city);
+            var queryURL = "https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=" + apiKey;
+                //city + "&api_key=XYsHSiFRkwTuMgGFDpw5LqcecNnT3tzl&limit=10";
+
+                $.ajax({
+                    url: queryURL,
+                    method: "GET"
+                })
+                    .then(function (response) {
+                        console.log(response);
+
+                        //   for (var i = 0; i < results.length; i++) {
+                        //     var gifDiv = $("<div>");
+
+                        //     var rating = results[i].rating;
+
+                        //     var p = $("<p>").text("Rating: " + rating);
+
+                        //     var personImage = $("<img>");
+                        //     personImage.attr("src", results[i].images.fixed_height.url);
+
+                        //     gifDiv.prepend(p);
+                        //     gifDiv.prepend(personImage);
+
+                        //     $("#gifs-appear-here").prepend(gifDiv);
+                        //   }
+                    });
+        });
+    </script>
+</body>
+
+</html>
