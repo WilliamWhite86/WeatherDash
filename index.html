@@ -30,11 +30,6 @@
         <div class=row>
             <div class="col-sx-3">
                 <ul class="list-group">
-                    <li class="list-group-item">Cras justo odio</li>
-                    <li class="list-group-item">Dapibus ac facilisis in</li>
-                    <li class="list-group-item">Morbi leo risus</li>
-                    <li class="list-group-item">Porta ac consectetur ac</li>
-                    <li class="list-group-item">Vestibulum at eros</li>
             </div>
         </div>
     </div>
@@ -43,6 +38,28 @@
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script>
         var apiKey = "ee316b84f88a186c92a6e31cd2dad1d8";
+        
+        var cityArray = [];
+
+        storedCities = JSON.parse(localStorage.getItem("cities"));
+        // if (storedCities !== null) {
+        //     for (i = 0; i < storedCities.length-1; i++)
+        //         var $cityLi = $("<li>", {"class": "list-group-item"});
+        //         eachCity = storedCities[i].name;
+        //         //cityName = eachCity.name;
+        //         console.log(eachCity);
+        //         $cityLi.text(eachCity);
+        //         $(".list-group").prepend($cityLi);
+        //     }
+
+        Object.values(storedCities).forEach((value) => {
+            var $cityLi = $("<li>", {"class": "list-group-item"});
+            $cityLi.text(value.name);
+            $(".list-group").prepend($cityLi);
+            console.log(value.name)}
+        )
+
+
         $("#searchButton").on("click", function () {
             var city = $(this).parent("div").children("div").children("input").val();
             console.log(city);
@@ -54,8 +71,20 @@
                     method: "GET"
                 })
                     .then(function (response) {
+                        var $cityLi = $("<li>", {"class": "list-group-item"});
                         console.log(response);
-
+                        $cityLi.text(response.name);
+                        $(".list-group").prepend($cityLi);
+                        cityObject = {
+                            name: response.name
+                        }
+                        cityArray = JSON.parse(localStorage.getItem("cities"));
+                        if (cityArray === null) {
+                            localStorage.setItem("cities", JSON.stringify([ cityObject ]));
+                        }
+                        else {
+                            cityArray.push(cityObject);
+                            localStorage.setItem("cities", JSON.stringify(cityArray));
                         //   for (var i = 0; i < results.length; i++) {
                         //     var gifDiv = $("<div>");
 
@@ -71,8 +100,8 @@
 
                         //     $("#gifs-appear-here").prepend(gifDiv);
                         //   }
-                    });
-        });
+                        };
+                    })});
     </script>
 </body>
 
