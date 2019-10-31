@@ -10,6 +10,7 @@
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
         integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 
 <body>
@@ -20,25 +21,39 @@
     </nav>
     <div class="container">
         <div class="row">
-            <div class="col-xs-2">
+            <div class="col-sm-2">
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"></div>
-            <div class="col-xs-1" id="searchButton">
+            <div class="col-sm-1" id="searchButton">
                 <a href="#" class="btn btn-primary">
                     <i class="fas fa-search"></i>
                 </a></div>
+                        
+            <div class="col-sm-3">
+                <ul class="list-group"></ul>
         </div>
-        <div class=row>
-            <div class="col-sx-3">
-                <ul class="list-group">
-            </div>
+                
+                <div class="col-sm-6">
+                <div class="jumbotron">
+                    <h1 class="display-4"></h1>
+                    <h3 class="temp"></h3>
+                    <h3 class="humidity"></h3>
+                    <h3 class="windSpeed"></h3>
+                    <h3 class="uvIndex"></h3>
+                    <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+                    <hr class="my-4">
+                    <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+                  </div></div>
+
+
         </div>
+
     </div>
-    </ul>
+    
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script>
         var apiKey = "ee316b84f88a186c92a6e31cd2dad1d8";
-        
+
         var cityArray = [];
 
         storedCities = JSON.parse(localStorage.getItem("cities"));
@@ -53,55 +68,65 @@
         //     }
 
         Object.values(storedCities).forEach((value) => {
-            var $cityLi = $("<li>", {"class": "list-group-item"});
+            var $cityLi = $("<li>", { "class": "list-group-item" });
             $cityLi.text(value.name);
             $(".list-group").prepend($cityLi);
-            console.log(value.name)}
+            console.log(value.name)
+        }
         )
 
 
         $("#searchButton").on("click", function () {
             var city = $(this).parent("div").children("div").children("input").val();
             console.log(city);
-            var queryURL = "https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=" + apiKey;
-                //city + "&api_key=XYsHSiFRkwTuMgGFDpw5LqcecNnT3tzl&limit=10";
+            var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey + "&units=imperial";
 
-                $.ajax({
-                    url: queryURL,
-                    method: "GET"
-                })
-                    .then(function (response) {
-                        var $cityLi = $("<li>", {"class": "list-group-item"});
-                        console.log(response);
-                        $cityLi.text(response.name);
-                        $(".list-group").prepend($cityLi);
-                        cityObject = {
-                            name: response.name
-                        }
-                        cityArray = JSON.parse(localStorage.getItem("cities"));
-                        if (cityArray === null) {
-                            localStorage.setItem("cities", JSON.stringify([ cityObject ]));
-                        }
-                        else {
-                            cityArray.push(cityObject);
-                            localStorage.setItem("cities", JSON.stringify(cityArray));
-                        //   for (var i = 0; i < results.length; i++) {
-                        //     var gifDiv = $("<div>");
+            var uviURL = "https://api.openweathermap.org/data/2.5/uvi/40.7,-7.2.json?appid=" + apiKey;
 
-                        //     var rating = results[i].rating;
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            })
+                .then(function (response) {
+                    var $cityLi = $("<li>", { "class": "list-group-item" });
+                    console.log(response);
+                    $cityLi.text(response.name);
+                    $(".list-group").prepend($cityLi);
+                    cityObject = {
+                        name: response.name
+                    }
+                    cityArray = JSON.parse(localStorage.getItem("cities"));
+                    if (cityArray === null) {
+                        localStorage.setItem("cities", JSON.stringify([cityObject]));
+                    }
+                    else {
+                        cityArray.push(cityObject);
+                        localStorage.setItem("cities", JSON.stringify(cityArray));
+                    };
 
-                        //     var p = $("<p>").text("Rating: " + rating);
+                    $(".display-4").text(response.name);
+                    $(".temp").text(response.main.temp);
+                    $(".humidity").text(response.main.humidity);
+                    $(".windSpeed").text(response.wind.speed);
+                    //$(".uvIndex").text(response.);
+                });
+        });
 
-                        //     var personImage = $("<img>");
-                        //     personImage.attr("src", results[i].images.fixed_height.url);
+        $("li").on("click", function() {
+            var city = $(this).text();
+            var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey + "&units=imperial";
 
-                        //     gifDiv.prepend(p);
-                        //     gifDiv.prepend(personImage);
-
-                        //     $("#gifs-appear-here").prepend(gifDiv);
-                        //   }
-                        };
-                    })});
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            })
+            .then(function (response) {
+                $(".display-4").text(response.name);
+                $(".temp").text(response.main.temp);
+                $(".humidity").text(response.main.humidity);
+                $(".windSpeed").text(response.wind.speed);
+            });
+        });
     </script>
 </body>
 
