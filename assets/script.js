@@ -44,8 +44,6 @@ function currentCall() {
             //used stack exchange to figure out icon image: https://stackoverflow.com/questions/44177417/how-to-display-openweathermap-weather-icon
             var iconCode = response.weather[0].icon;
             var iconURL = "http://openweathermap.org/img/w/" + iconCode + ".png";
-            //$cityLi.text(response.name);
-            //$(".list-group").prepend($cityLi);
 
             cityObject = {
                 name: response.name
@@ -56,7 +54,7 @@ function currentCall() {
             }
             else {
 
-                //not sure how i got this working...
+                //not sure how exactly i got this working...
                 function listCleaner() {
                     for (i = 0; i < cityArray.length; i++) {
                         if (cityArray[i].name === cityObject.name) {
@@ -68,8 +66,8 @@ function currentCall() {
                     localStorage.setItem("cities", JSON.stringify(cityArray));
 
                 }
-            }
-            listCleaner();
+            }       if (cityArray !== null){
+                    listCleaner();}
 
             $(".city").text(response.name);
             $(".temp").text("Temp: " + response.main.temp);
