@@ -104,12 +104,19 @@
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script>
         var apiKey = "ee316b84f88a186c92a6e31cd2dad1d8";
-        var cityArray = [];
-        var city;
-        var cityLat;
-        var cityLong;
+        var cityArray = []
+        var city
+        var cityLat
+        var cityLong
+        var removedCity
 
         storedCities = JSON.parse(localStorage.getItem("cities"));
+
+         if (storedCities !== null){
+             city=storedCities[0].name;
+             window.onload=currentCall(city)};
+             //renderList();
+            
 
         function renderList() {
             Object.values(storedCities).forEach((value) => {
@@ -121,8 +128,8 @@
         }
 
         if (storedCities !== null) {
-            renderList();
-        }
+             renderList();
+         }
 
 
         $("#searchButton").on("click", function () {
@@ -141,8 +148,8 @@
                     //used stack exchange to figure out icon image: https://stackoverflow.com/questions/44177417/how-to-display-openweathermap-weather-icon
                     var iconCode = response.weather[0].icon;
                     var iconURL = "http://openweathermap.org/img/w/" + iconCode + ".png";
-                    $cityLi.text(response.name);
-                    $(".list-group").prepend($cityLi);
+                    //$cityLi.text(response.name);
+                    //$(".list-group").prepend($cityLi);
 
                     cityObject = {
                         name: response.name
@@ -153,14 +160,24 @@
                     }
                     else {
 
-                        cityArray.push(cityObject);
+                        //not sure how i got this working...
+                        function listCleaner(){
+                        for (i = 0; i < cityArray.length; i++) {
+                            if (cityArray[i].name===cityObject.name){
+                                removedCity = cityArray.splice([i],1);
+                            };
+                        }
+                        cityArray.unshift(cityObject);
+
                         localStorage.setItem("cities", JSON.stringify(cityArray));
-                    }
+                        
+                    }}
+                    listCleaner();
 
                     $(".city").text(response.name);
-                    $(".temp").text(response.main.temp);
-                    $(".humidity").text(response.main.humidity);
-                    $(".windSpeed").text(response.wind.speed);
+                    $(".temp").text("Temp: "+response.main.temp);
+                    $(".humidity").text("Humidity: "+response.main.humidity);
+                    $(".windSpeed").text("Wind: "+response.wind.speed);
                     $("#icon").attr('src', iconURL);
                     cityLat = response.coord.lat;
                     cityLong = response.coord.lon;
@@ -188,11 +205,7 @@
                         method: "GET",
                     })
                         .then(function (response) {
-                            console.log(response);
 
-                            //console.log(iconCode);
-
-                            console.log(iconURL);
                             for (var i = 4; i < response.list.length; i += 8) {
                                 var iconCode = response.list[i].weather[0].icon;
                                 var iconURL = "http://openweathermap.org/img/w/" + iconCode + ".png";
@@ -213,7 +226,6 @@
 
         $(document).on("click", "li", function () {
             city = $(this).text();
-            console.log(city);
             currentCall();
         });
 
