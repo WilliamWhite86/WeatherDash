@@ -34,7 +34,8 @@
             </div>
             <div class="col-sm-6">
                 <div class="jumbotron">
-                    <h1 class="display-4"></h1>
+                    <h1 class="city"></h1>
+                    <img id="icon"></img>
                     <h3 class="temp"></h3>
                     <h3 class="humidity"></h3>
                     <h3 class="windSpeed"></h3>
@@ -44,55 +45,50 @@
                         <div class="col-sm-4">
                             <div class="card" style="width: 8rem;">
                                 <div class="card-body">
-                                    <h5 class="card-title">Title</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted">Sub</h6>
-                                    <p class="card-text">Text</p>
-                                    <a href="#" class="card-link">link</a>
-                                    <a href="#" class="card-link">link</a>
+                                    <h5 class="card-title" id="day-3"></h5>
+                                    <h6 class="card-subtitle mb-2 text-muted" id="temp-3"></h6>
+                                    <p class="card-text" id="humid-3"></p>
+                                    <img id="icon-3"></img>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="card" style="width: 8rem;">
                                 <div class="card-body">
-                                    <h5 class="card-title">Title</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted">Sub</h6>
-                                    <p class="card-text">Text</p>
-                                    <a href="#" class="card-link">Link</a>
-                                    <a href="#" class="card-link">Link</a>
+                                    <h5 class="card-title" id="day-11"></h5>
+                                    <h6 class="card-subtitle mb-2 text-muted" id="temp-11"></h6>
+                                    <p class="card-text" id="humid-11"></p>
+                                    <img id="icon-11"></img>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="card" style="width: 8rem;">
                                 <div class="card-body">
-                                    <h5 class="card-title">Title</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted">Sub</h6>
-                                    <p class="card-text">Text</p>
-                                    <a href="#" class="card-link">Link</a>
-                                    <a href="#" class="card-link">Link</a>
+                                    <h5 class="card-title" id="day-19"></h5>
+                                    <h6 class="card-subtitle mb-2 text-muted" id="temp-19"></h6>
+                                    <p class="card-text" id="humid-19"></p>
+                                    <img id="icon-19"></img>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="card" style="width: 8rem;">
                                 <div class="card-body">
-                                    <h5 class="card-title">Title</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted">Sub</h6>
-                                    <p class="card-text">Text</p>
-                                    <a href="#" class="card-link">Link</a>
-                                    <a href="#" class="card-link">Link</a>
+                                    <h5 class="card-title" id="day-27"></h5>
+                                    <h6 class="card-subtitle mb-2 text-muted" id="temp-27"></h6>
+                                    <p class="card-text" id="humid-27"></p>
+                                    <img id="icon-27"></img>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="card" style="width: 8rem;">
                                 <div class="card-body">
-                                    <h5 class="card-title">Title</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted">Sub</h6>
-                                    <p class="card-text">Text</p>
-                                    <a href="#" class="card-link">Link</a>
-                                    <a href="#" class="card-link">Link</a>
+                                    <h5 class="card-title" day id="day-35"></h5>
+                                    <h6 class="card-subtitle mb-2 text-muted" id="temp-35"></h6>
+                                    <p class="card-text" id="humid-35"></p>
+                                    <img id="icon-35"></img>
                                 </div>
                             </div>
                         </div>
@@ -141,8 +137,10 @@
                 method: "GET",
             })
                 .then(function (response) {
-                    console.log(response);
                     var $cityLi = $("<li>", { "class": "list-group-item" });
+                    //used stack exchange to figure out icon image: https://stackoverflow.com/questions/44177417/how-to-display-openweathermap-weather-icon
+                    var iconCode = response.weather[0].icon;
+                    var iconURL = "http://openweathermap.org/img/w/" + iconCode + ".png";
                     $cityLi.text(response.name);
                     $(".list-group").prepend($cityLi);
 
@@ -154,14 +152,16 @@
                         localStorage.setItem("cities", JSON.stringify([cityObject]));
                     }
                     else {
+
                         cityArray.push(cityObject);
                         localStorage.setItem("cities", JSON.stringify(cityArray));
-                    };
+                    }
 
-                    $(".display-4").text(response.name);
+                    $(".city").text(response.name);
                     $(".temp").text(response.main.temp);
                     $(".humidity").text(response.main.humidity);
                     $(".windSpeed").text(response.wind.speed);
+                    $("#icon").attr('src', iconURL);
                     cityLat = response.coord.lat;
                     cityLong = response.coord.lon;
                     cityId = response.id;
@@ -173,58 +173,48 @@
                     })
                         .then(function (response) {
                             $(".uvIndex").text(response.value);
-                            console.log(response);
+                            //console.log(response);
                             var $dateHeader = $("<h2>");
                             var shortDate = response.date_iso.substr(0, response.date_iso.indexOf('T'));
-                            console.log(shortDate);
+                            //console.log(shortDate);
                             $dateHeader.text(shortDate);
                             $("h1").append($dateHeader);
                         })
 
                     var fiveDayURL = `https://api.openweathermap.org/data/2.5/forecast?appid=${apiKey}&id=${cityId}&units=imperial`;
-
+                    var index = 3;
                     $.ajax({
                         url: fiveDayURL,
                         method: "GET",
                     })
                         .then(function (response) {
                             console.log(response);
-                            for (var i = 3; i < response.list.length; i += 8) {
-                                console.log(response.list[i].main.temp)
+
+                            //console.log(iconCode);
+
+                            console.log(iconURL);
+                            for (var i = 4; i < response.list.length; i += 8) {
+                                var iconCode = response.list[i].weather[0].icon;
+                                var iconURL = "http://openweathermap.org/img/w/" + iconCode + ".png";
+                                var shortDate = response.list[i].dt_txt.substr(0, response.list[i].dt_txt.indexOf(' '));
+                                $("#day-" + index).text(shortDate);
+                                $("#temp-" + index).text(response.list[i].main.temp);
+                                $("#humid-" + index).text(response.list[i].main.humidity);
+                                $("#icon-" + index).attr('src', iconURL);
+                                index = index + 8;
+
+
                             }
-                            
+
                         })
-                    
+
                 })
         };
 
-        $("li").on("click", function () {
-            var city = $(this).text();
-            var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`;
-
-            $.ajax({
-                url: queryURL,
-                method: "GET"
-            })
-                .then(function (response) {
-                    $(".display-4").text(response.name);
-                    $(".temp").text(response.main.temp);
-                    $(".humidity").text(response.main.humidity);
-                    $(".windSpeed").text(response.wind.speed);
-                    cityLat = response.coord.lat;
-                    cityLong = response.coord.lon;
-                    cityId = response.id;
-
-                    var uviURL = `https://api.openweathermap.org/data/2.5/uvi?appid=${apiKey}&lat=${cityLat}&lon=${cityLong}&units=imperial`;
-                    $.ajax({
-                        url: uviURL,
-                        method: "GET",
-                    })
-                        .then(function (response) {
-                            $(".uvIndex").text(response.value);
-                            console.log(response);
-                        })
-                });
+        $(document).on("click", "li", function () {
+            city = $(this).text();
+            console.log(city);
+            currentCall();
         });
 
     </script>
