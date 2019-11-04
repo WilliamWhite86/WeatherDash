@@ -29,6 +29,7 @@ if (storedCities !== null) {
 
 $("#searchButton").on("click", function () {
     city = $(this).parent("div").children("div").children("input").val();
+    $(this).parent("div").children("div").children("input").val("");
     currentCall();
 });
 
